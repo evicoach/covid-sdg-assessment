@@ -75,8 +75,8 @@ const dollarsInFlight = (input, neededImpact) => infectionsByRequestedTime(input
   impactLevel, neededImpact)
    * input.region.avgDailyIncomePopulation
    * input.region.avgDailyIncomeInUSD
-   * input.population;
-  //  * actualTimeInDays(input);
+   * actualTimeInDays(input);
+  //  * input.population;
 
 const covid19ImpactEstimator = (data) => {
   const impact = {};
