@@ -1,4 +1,6 @@
 const covid19ImpactEstimator = (data)=>{
+    const IMPACT = "impact";
+    const SEVERE_IMPACT = "severeimpact";
 
     let output = {};
     
@@ -17,14 +19,22 @@ const covid19ImpactEstimator = (data)=>{
     severeImpact.infectionsByRequestedTime = (timeInDays)=>{
         // NB: currentlyInfected doubles every 3 days
     };
+
+    return {
+        data,
+        impact,
+        severeImpact
+    }
 };
 
 const currentlyInfected = (reportedCases, impactLevel)=>{
     switch(impactLevel.toLowerCase()){
         case 'impact':
             return reportedCases * 10;
-            case 'severeimpact':
-                return reportedCases * 50;
+        case 'severeimpact':
+            return reportedCases * 50;
+        default: 
+            throw Error('No such Impact');
     }
 }
 
