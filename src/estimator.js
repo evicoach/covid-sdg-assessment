@@ -1,7 +1,6 @@
 const covid19ImpactEstimator = (data)=>{
-
-    const IMPACT = "impact";
-    const SEVERE_IMPACT = "severeimpact";
+    const IMPACT = 'impact';
+    const SEVERE_IMPACT = 'severeimpact';
 
     let impactCurrentlyInfected = 0;
     let severeImpactCurrentlyInfected = 0;
