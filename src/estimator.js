@@ -30,6 +30,7 @@ const actualTimeInDays = (input) => {
   }
   return timeInDays;
 };
+
 const infectionsByRequestedTime = (input, impact, neededImpact) => {
   // NB: currentlyInfected doubles every 3 days
   const impactCurrentlyInfected = currentlyInfected(input.reportedCases, impact.IMPACT);
@@ -114,13 +115,18 @@ const covid19ImpactEstimator = (data) => {
 
   impact.dollarsInFlight = impact.infectionsByRequestedTime
     * data.region.avgDailyIncomeInUSD
-    * data.region.avgDailyIncomePopulation
+    // * data.region.avgDailyIncomePopulation
     * actualTimeInDays(data);
   severeImpact.dollarsInFlight = severeImpact.infectionsByRequestedTime
     * data.region.avgDailyIncomeInUSD
-    * data.region.avgDailyIncomePopulation
+    // * data.region.avgDailyIncomePopulation
     * actualTimeInDays(data);
 
+
+    /**
+     * the infected pipo, how much do they use to earn
+     * the whole pipo, how much do they earn
+     */
   return {
     data,
     impact,
