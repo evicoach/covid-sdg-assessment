@@ -102,15 +102,15 @@ const covid19ImpactEstimator = (data) => {
 
   // CHALLENGE 3
 
-  impact.casesForICUByRequestedTime = 0.05
-    * impact.infectionsByRequestedTime;
-  severeImpact.casesForICUByRequestedTime = 0.05
-   * severeImpact.infectionsByRequestedTime;
+  impact.casesForICUByRequestedTime = parseInt(0.05
+    * impact.infectionsByRequestedTime, 10);
+  severeImpact.casesForICUByRequestedTime = parseInt(0.05
+   * severeImpact.infectionsByRequestedTime, 10);
 
-  impact.casesForVentilatorsByRequestedTime = 0.02
-   * impact.infectionsByRequestedTime;
-  severeImpact.casesForVentilatorsByRequestedTime = 0.02
-   * severeImpact.infectionsByRequestedTime;
+  impact.casesForVentilatorsByRequestedTime = parseInt(0.02
+   * impact.infectionsByRequestedTime, 10);
+  severeImpact.casesForVentilatorsByRequestedTime = parseInt(0.02
+   * impact.infectionsByRequestedTime, 10);
 
   impact.dollarsInFlight = impact.infectionsByRequestedTime
     * data.region.avgDailyIncomeInUSD
