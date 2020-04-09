@@ -13,6 +13,23 @@ const currentlyInfected = (reportedCases, neededImpact) => {
 const calImpactByRequestedTime = (currentlyInfectedNum,
   factor) => currentlyInfectedNum * (2 ** factor);
 
+const actualTimeInDays = (input) => {
+  let timeInDays = 0;
+  switch (input.periodType) {
+    case 'days':
+      timeInDays = input.timeToElapse;
+      break;
+    case 'weeks':
+      timeInDays = input.timeToElapse * 7;
+      break;
+    case 'months':
+      timeInDays = input.timeToElapse * 30;
+      break;
+    default:
+      timeInDays = -1;
+  }
+  return timeInDays;
+};
 const infectionsByRequestedTime = (input, impact, neededImpact) => {
   // NB: currentlyInfected doubles every 3 days
   const impactCurrentlyInfected = currentlyInfected(input.reportedCases, impact.IMPACT);
@@ -20,20 +37,7 @@ const infectionsByRequestedTime = (input, impact, neededImpact) => {
     impact.SEVERE_IMPACT);
 
   // Normalizing time to elapse
-  let actualTime = 0;
-  switch (input.periodType) {
-    case 'days':
-      actualTime = input.timeToElapse;
-      break;
-    case 'weeks':
-      actualTime = input.timeToElapse * 7;
-      break;
-    case 'months':
-      actualTime = input.timeToElapse * 30;
-      break;
-    default:
-      actualTime = -1;
-  }
+  const actualTime = actualTimeInDays(input);
 
   // Getting the factor
   let timeToDouble = 3;
@@ -51,10 +55,26 @@ const infectionsByRequestedTime = (input, impact, neededImpact) => {
   return value;
 };
 
-const severeCasesByRequestedTime = (input, neededImpact) => {
-  const severeCases = 0.15 * infectionsByRequestedTime(input, impactLevel, neededImpact);
-  return parseInt(severeCases, 10);
+// const severeCasesByRequestedTime = (input, neededImpact) => {
+//   const severeCases = 0.15 * infectionsByRequestedTime(input, impactLevel, neededImpact);
+//   return parseInt(severeCases, 10);
+// };
+
+// const casesForICUByRequestedTime = (input, neededImpact) => {
+//   let fivePct = 0.05 * infectionsByRequestedTime(input, impactLevel, neededImpact);
+//   return parseInt(fivePct, 10);
+// }
+
+const pctNeeded = (input, percent, neededImpact) => {
+  const value = (percent / 100) * infectionsByRequestedTime(input,
+    impactLevel, neededImpact);
+  return parseInt(value, 10);
 };
+
+const dollarsInFlight = (input, neededImpact) => infectionsByRequestedTime(input,
+  impactLevel, neededImpact)
+   * input.region.avgDailyIncomePopulation
+   * actualTimeInDays(input);
 
 const covid19ImpactEstimator = (data) => {
   const impact = {};
@@ -75,14 +95,30 @@ const covid19ImpactEstimator = (data) => {
 
   // CHALLENGE 2
 
-  impact.severeCasesByRequestedTime = severeCasesByRequestedTime(data,
+  impact.severeCasesByRequestedTime = pctNeeded(data, 15,
     impactLevel.IMPACT);
-  severeImpact.severeCasesByRequestedTime = severeCasesByRequestedTime(data,
+  severeImpact.severeCasesByRequestedTime = pctNeeded(data, 15,
     impactLevel.SEVERE_IMPACT);
+
   impact.hospitalBedsByRequestedTime = parseInt((data.totalHospitalBeds * availableBedsPct)
     - impact.severeCasesByRequestedTime, 10);
   severeImpact.hospitalBedsByRequestedTime = parseInt((data.totalHospitalBeds * availableBedsPct)
      - severeImpact.severeCasesByRequestedTime, 10);
+
+  // CHALLENGE 3
+
+  impact.casesForICUByRequestedTime = pctNeeded(data, 5,
+    impactLevel.IMPACT);
+  severeImpact.casesForICUByRequestedTime = pctNeeded(data, 5,
+    impactLevel.SEVERE_IMPACT);
+
+  impact.casesForVentilatorsByRequestedTime = pctNeeded(data, 2,
+    impactLevel.IMPACT);
+  severeImpact.casesForVentilatorsByRequestedTime = pctNeeded(data, 2,
+    impactLevel.SEVERE_IMPACT);
+
+  impact.dollarsInFlight = dollarsInFlight(data, impactLevel.IMPACT);
+  severeImpact.dollarsInFlight = dollarsInFlight(data, impactLevel.SEVERE_IMPACT);
 
   return {
     data,
