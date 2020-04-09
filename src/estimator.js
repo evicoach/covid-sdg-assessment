@@ -1,65 +1,72 @@
 const covid19ImpactEstimator = (data) => {
-    const IMPACT = 'impact';
-    const SEVERE_IMPACT = 'severeimpact';
+  const IMPACT = 'impact';
+  const SEVERE_IMPACT = 'severeimpact';
 
-    const impact = {};
-    const severeImpact = {};
+  const impact = {};
+  const severeImpact = {};
 
-    let impactCurrentlyInfected = 0;
-    let severeImpactCurrentlyInfected = 0;
+  let impactCurrentlyInfected = 0;
+  let severeImpactCurrentlyInfected = 0;
 
-    const calImpactByRequestedTime = (currentlyInfected, factor) => currentlyInfected * Math.pow(2, factor);
+  const currentlyInfected = (reportedCases, impactLevel) => {
+    switch (impactLevel.toLowerCase()) {
+      case 'impact':
+        return reportedCases * 10;
+      case 'severeimpact':
+        return reportedCases * 50;
+      default:
+        throw Error('No such Impact');
+    }
+  };
 
-    const infectionsByRequestedTime = (timeToElapse) => {
-        // NB: currentlyInfected doubles every 3 days
-        impactCurrentlyInfected = currentlyInfected(data.reportedCases, IMPACT);
-        severeImpactCurrentlyInfected = currentlyInfected(data.reportedCases, SEVERE_IMPACT);
+  const calImpactByRequestedTime = (currentlyInfectedNum,
+    factor) => currentlyInfectedNum * (2 ** factor);
 
-        // Normalizing time to elapse
-        let actualTime = 0;
-        switch (timeToElapse) {
-            case 'days':
-                return actualTime = timeToElapse;
-            case 'weeks':
-                return actualTime = timeToElapse * 7;
-            case 'month':
-                return actualTime = timeToElapse * 30;
-        }
+  const infectionsByRequestedTime = (timeToElapse) => {
+    // NB: currentlyInfected doubles every 3 days
+    impactCurrentlyInfected = currentlyInfected(data.reportedCases, IMPACT);
+    severeImpactCurrentlyInfected = currentlyInfected(data.reportedCases, SEVERE_IMPACT);
 
-        // Getting the factor
-        let timeToDouble = 3;
-        let factor = parseInt(actualTime / timeToDouble);
-
-        const impactInfectionsByRequestedTime = calImpactByRequestedTime(impactCurrentlyInfected, factor)
-        const severeImpactInfectionsByRequestedTime = calImpactByRequestedTime(severeImpactCurrentlyInfected, factor);
-
-        // Set the appropriate properties of both impact of severe impact
-        impact.infectionsByRequestedTime = impactInfectionsByRequestedTime;
-        severeImpact.infectionsByRequestedTime = severeImpactInfectionsByRequestedTime;
-    };
-
-    const currentlyInfected = (reportedCases, impactLevel) => {
-        switch (impactLevel.toLowerCase()) {
-            case 'impact':
-                return reportedCases * 10;
-            case 'severeimpact':
-                return reportedCases * 50;
-            default:
-                throw Error('No such Impact');
-        }
+    // Normalizing time to elapse
+    let actualTime = 0;
+    switch (timeToElapse) {
+      case 'days':
+        actualTime = timeToElapse;
+        break;
+      case 'weeks':
+        actualTime = timeToElapse * 7;
+        break;
+      case 'month':
+        actualTime = timeToElapse * 30;
+        break;
+      default:
+        actualTime = -1;
     }
 
-    impact.currentlyInfected = impactCurrentlyInfected;
-    severeImpact.currentlyInfected = severeImpactCurrentlyInfected;
+    // Getting the factor
+    const timeToDouble = 3;
+    const factor = parseInt(actualTime / timeToDouble, 10);
 
-    impact.infectionsByRequestedTime = infectionsByRequestedTime(data.timeToElapse);
-    severeImpact.infectionsByRequestedTime = infectionsByRequestedTime(data.timeToElapse);
+    const impactByReqTim = calImpactByRequestedTime(impactCurrentlyInfected, factor);
+    const severeImptByRequestTime = calImpactByRequestedTime(severeImpactCurrentlyInfected, factor);
 
-    return {
-        data,
-        impact,
-        severeImpact
-    };
+    // Set the appropriate properties of both impact of severe impact
+    impact.infectionsByRequestedTime = impactByReqTim;
+    severeImpact.infectionsByRequestedTime = severeImptByRequestTime;
+  };
+
+
+  impact.currentlyInfected = impactCurrentlyInfected;
+  severeImpact.currentlyInfected = severeImpactCurrentlyInfected;
+
+  impact.infectionsByRequestedTime = infectionsByRequestedTime(data.timeToElapse);
+  severeImpact.infectionsByRequestedTime = infectionsByRequestedTime(data.timeToElapse);
+
+  return {
+    data,
+    impact,
+    severeImpact
+  };
 };
 
 export default covid19ImpactEstimator;
