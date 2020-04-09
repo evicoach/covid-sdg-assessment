@@ -8,6 +8,10 @@ const covid19ImpactEstimator = (data)=>{
     let impact = {};
     let severeImpact = {};
 
+    const calImpactByRequestedTime = (currentlyInfected, factor)=>{
+        return currentlyInfected * Math.pow(2, factor);
+    }
+
     const infectionsByRequestedTime = (timeToElapse, impactLevel)=>{
         // NB: currentlyInfected doubles every 3 days
         impactCurrentlyInfected =
@@ -25,6 +29,19 @@ const covid19ImpactEstimator = (data)=>{
             case 'month':
                 return actualTime = timeToElapse * 30; 
         }
+
+        // Getting the factor
+        let timeToDouble = 3;
+        let factor = parseInt(actualTime / timeToDouble);
+
+        const impactInfectionsByRequestedTime =
+             calImpactByRequestedTime(impactCurrentlyInfected, factor)
+        const severeImpactInfectionsByRequestedTime =
+             calImpactByRequestedTime(severeImpactCurrentlyInfected, factor);
+
+        // Set the appropriate properties of both impact of severe impact
+        impact.infectionsByRequestedTime = impactInfectionsByRequestedTime;
+        severeImpact.infectionsByRequestedTime = severeImpactInfectionsByRequestedTime;
     };
     
     const currentlyInfected = (reportedCases, impactLevel)=>{
