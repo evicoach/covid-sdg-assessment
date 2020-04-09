@@ -36,16 +36,19 @@ const infectionsByRequestedTime = (input, impact, neededImpact) => {
   }
 
   // Getting the factor
-  const timeToDouble = 3;
+  let timeToDouble = 3;
+  if (timeToDouble <= 0) {
+    timeToDouble = 1;
+  }
   const factor = parseInt(actualTime / timeToDouble, 10);
-
+  let value = 0;
   const impactByReqTime = calImpactByRequestedTime(impactCurrentlyInfected, factor);
   const severeImptByReqTime = calImpactByRequestedTime(severeImpactCurrentlyInfected, factor);
 
   // Set the appropriate properties of both impact of severe impact
-  if (neededImpact.toLowerCase() === impactLevel.IMPACT) return impactByReqTime;
-  if (neededImpact.toLowerCase() === impactLevel.SEVERE_IMPACT) return severeImptByReqTime;
-  return null;
+  if (neededImpact.toLowerCase() === impactLevel.IMPACT) value = impactByReqTime;
+  if (neededImpact.toLowerCase() === impactLevel.SEVERE_IMPACT) value = severeImptByReqTime;
+  return value;
 };
 
 const covid19ImpactEstimator = (data) => {
@@ -59,10 +62,10 @@ const covid19ImpactEstimator = (data) => {
   impact.currentlyInfected = impactCurrentlyInfected;
   severeImpact.currentlyInfected = severeImpactCurrentlyInfected;
 
-  impact.infectionsByRequestedTime = infectionsByRequestedTime(data.timeToElapse,
-    impactLevel, impactLevel.IMPACT);
-  severeImpact.infectionsByRequestedTime = infectionsByRequestedTime(data.timeToElapse,
-    impactLevel, impactLevel.SEVERE_IMPACT);
+  impact.infectionsByRequestedTime = parseInt(infectionsByRequestedTime(data,
+    impactLevel, impactLevel.IMPACT), 10);
+  severeImpact.infectionsByRequestedTime = parseInt(infectionsByRequestedTime(data,
+    impactLevel, impactLevel.SEVERE_IMPACT), 10);
 
   return {
     data,
