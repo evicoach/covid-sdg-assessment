@@ -117,7 +117,7 @@ const covid19ImpactEstimator = (data) => {
   impact.casesForVentilatorsByRequestedTime = pctNeeded(data, 2,
     impactLevel.IMPACT);
   severeImpact.casesForVentilatorsByRequestedTime = pctNeeded(data, 2,
-    impactLevel.SEVERE_IMPACT);
+    impactLevel.IMPACT);
 
   impact.dollarsInFlight = dollarsInFlight(data, impactLevel.IMPACT).toFixed(2);
   severeImpact.dollarsInFlight = dollarsInFlight(data, impactLevel.SEVERE_IMPACT).toFixed(2);
