@@ -79,10 +79,10 @@ const covid19ImpactEstimator = (data) => {
     impactLevel.IMPACT);
   severeImpact.severeCasesByRequestedTime = severeCasesByRequestedTime(data,
     impactLevel.SEVERE_IMPACT);
-  impact.hospitalBedsByRequestedTime = impact.severeCasesByRequestedTime
-    - (data.totalHospitalBeds * availableBedsPct);
-  severeImpact.hospitalBedsByRequestedTime = severeImpact.severeCasesByRequestedTime
-    - (data.totalHospitalBeds * availableBedsPct);
+  impact.hospitalBedsByRequestedTime = parseInt((data.totalHospitalBeds * availableBedsPct)
+    - impact.severeCasesByRequestedTime, 10);
+  severeImpact.hospitalBedsByRequestedTime = parseInt(severeImpact.severeCasesByRequestedTime
+    - (data.totalHospitalBeds * availableBedsPct), 10);
 
   return {
     data,
