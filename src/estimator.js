@@ -74,6 +74,8 @@ const pctNeeded = (input, percent, neededImpact) => {
 const dollarsInFlight = (input, neededImpact) => infectionsByRequestedTime(input,
   impactLevel, neededImpact)
    * input.region.avgDailyIncomePopulation
+   * input.region.avgDailyIncomeInUSD
+   * input.population
    * actualTimeInDays(input);
 
 const covid19ImpactEstimator = (data) => {
@@ -117,8 +119,8 @@ const covid19ImpactEstimator = (data) => {
   severeImpact.casesForVentilatorsByRequestedTime = pctNeeded(data, 2,
     impactLevel.SEVERE_IMPACT);
 
-  impact.dollarsInFlight = dollarsInFlight(data, impactLevel.IMPACT);
-  severeImpact.dollarsInFlight = dollarsInFlight(data, impactLevel.SEVERE_IMPACT);
+  impact.dollarsInFlight = dollarsInFlight(data, impactLevel.IMPACT).toFixed(2);
+  severeImpact.dollarsInFlight = dollarsInFlight(data, impactLevel.SEVERE_IMPACT).toFixed(2);
 
   return {
     data,
