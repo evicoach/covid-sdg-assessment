@@ -28,7 +28,7 @@ const infectionsByRequestedTime = (input, impact, neededImpact) => {
     case 'weeks':
       actualTime = input.timeToElapse * 7;
       break;
-    case 'month':
+    case 'months':
       actualTime = input.timeToElapse * 30;
       break;
     default:
