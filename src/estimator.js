@@ -65,18 +65,11 @@ const infectionsByRequestedTime = (input, impact, neededImpact) => {
 //   return parseInt(fivePct, 10);
 // }
 
-const pctNeeded = (input, percent, neededImpact) => {
-  const value = ((percent / 100).toFixed(2)) * infectionsByRequestedTime(input,
-    impactLevel, neededImpact);
-  return parseInt(value, 10);
-};
-
-const dollarsInFlight = (input, neededImpact) => infectionsByRequestedTime(input,
-  impactLevel, neededImpact)
-   * input.region.avgDailyIncomePopulation
-   * input.region.avgDailyIncomeInUSD
-   * actualTimeInDays(input);
-  //  * input.population;
+// const pctNeeded = (input, percent, neededImpact) => {
+//   const value = ((percent / 100).toFixed(2)) * infectionsByRequestedTime(input,
+//     impactLevel, neededImpact);
+//   return parseInt(value, 10);
+// };
 
 const covid19ImpactEstimator = (data) => {
   const impact = {};
@@ -109,18 +102,24 @@ const covid19ImpactEstimator = (data) => {
 
   // CHALLENGE 3
 
-  impact.casesForICUByRequestedTime = pctNeeded(data, 5,
-    impactLevel.IMPACT);
-  severeImpact.casesForICUByRequestedTime = pctNeeded(data, 5,
-    impactLevel.SEVERE_IMPACT);
+  impact.casesForICUByRequestedTime = 0.05
+    * impact.infectionsByRequestedTime;
+  severeImpact.casesForICUByRequestedTime = 0.05
+   * severeImpact.infectionsByRequestedTime;
 
-  impact.casesForVentilatorsByRequestedTime = pctNeeded(data, 2,
-    impactLevel.IMPACT);
-  severeImpact.casesForVentilatorsByRequestedTime = pctNeeded(data, 2,
-    impactLevel.IMPACT);
+  impact.casesForVentilatorsByRequestedTime = 0.02
+   * impact.infectionsByRequestedTime;
+  severeImpact.casesForVentilatorsByRequestedTime = 0.02
+   * severeImpact.infectionsByRequestedTime;
 
-  impact.dollarsInFlight = dollarsInFlight(data, impactLevel.IMPACT).toFixed(2);
-  severeImpact.dollarsInFlight = dollarsInFlight(data, impactLevel.SEVERE_IMPACT).toFixed(2);
+  impact.dollarsInFlight = impact.infectionsByRequestedTime
+    * data.region.avgDailyIncomeInUSD
+    * data.region.avgDailyIncomePopulation
+    * actualTimeInDays(data);
+  severeImpact.dollarsInFlight = severeImpact.infectionsByRequestedTime
+    * data.region.avgDailyIncomeInUSD
+    * data.region.avgDailyIncomePopulation
+    * actualTimeInDays(data);
 
   return {
     data,
