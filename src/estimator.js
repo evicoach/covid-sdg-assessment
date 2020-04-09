@@ -65,11 +65,11 @@ const infectionsByRequestedTime = (input, impact, neededImpact) => {
 //   return parseInt(fivePct, 10);
 // }
 
-// const pctNeeded = (input, percent, neededImpact) => {
-//   const value = ((percent / 100).toFixed(2)) * infectionsByRequestedTime(input,
-//     impactLevel, neededImpact);
-//   return parseInt(value, 10);
-// };
+const pctNeeded = (input, percent, neededImpact) => {
+  const value = ((percent / 100).toFixed(2)) * infectionsByRequestedTime(input,
+    impactLevel, neededImpact);
+  return parseInt(value, 10);
+};
 
 const covid19ImpactEstimator = (data) => {
   const impact = {};
