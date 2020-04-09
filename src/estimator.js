@@ -121,12 +121,7 @@ const covid19ImpactEstimator = (data) => {
     * data.region.avgDailyIncomeInUSD
     // * data.region.avgDailyIncomePopulation
     * actualTimeInDays(data);
-
-
-    /**
-     * the infected pipo, how much do they use to earn
-     * the whole pipo, how much do they earn
-     */
+    
   return {
     data,
     impact,
