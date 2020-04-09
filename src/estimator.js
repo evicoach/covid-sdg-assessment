@@ -51,15 +51,9 @@ const infectionsByRequestedTime = (input, impact, neededImpact) => {
   return value;
 };
 
-const severeCasesByRequestedTime = (input, neededImpact) => {
-  const severeCases = 0.15 * infectionsByRequestedTime(input, impactLevel, neededImpact);
-  return parseInt(severeCases, 10);
-};
-
 const covid19ImpactEstimator = (data) => {
   const impact = {};
   const severeImpact = {};
-  const availableBedsPct = 0.35;
 
   const impactCurrentlyInfected = currentlyInfected(data.reportedCases, impactLevel.IMPACT);
   const severeImpactCurrentlyInfected = currentlyInfected(data.reportedCases,
@@ -72,16 +66,6 @@ const covid19ImpactEstimator = (data) => {
     impactLevel, impactLevel.IMPACT), 10);
   severeImpact.infectionsByRequestedTime = parseInt(infectionsByRequestedTime(data,
     impactLevel, impactLevel.SEVERE_IMPACT), 10);
-
-  // CHALLENGE 2
-
-  // impact.severeCasesByRequestedTime = severeCasesByRequestedTime(data,
-  //    impactLevel.IMPACT);
-  severeImpact.severeCasesByRequestedTime = severeCasesByRequestedTime(data,
-    impactLevel.SEVERE_IMPACT);
-  // impact.hospitalBedsByRequestedTime =
-  severeImpact.hospitalBedsByRequestedTime = (data.totalHospitalBeds * availableBedsPct)
-   - severeImpact.severeCasesByRequestedTime;
 
   return {
     data,
