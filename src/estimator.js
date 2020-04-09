@@ -66,7 +66,7 @@ const infectionsByRequestedTime = (input, impact, neededImpact) => {
 // }
 
 const pctNeeded = (input, percent, neededImpact) => {
-  const value = (percent / 100) * infectionsByRequestedTime(input,
+  const value = ((percent / 100).toFixed(2)) * infectionsByRequestedTime(input,
     impactLevel, neededImpact);
   return parseInt(value, 10);
 };
@@ -75,8 +75,8 @@ const dollarsInFlight = (input, neededImpact) => infectionsByRequestedTime(input
   impactLevel, neededImpact)
    * input.region.avgDailyIncomePopulation
    * input.region.avgDailyIncomeInUSD
-   * input.population
-   * actualTimeInDays(input);
+   * input.population;
+  //  * actualTimeInDays(input);
 
 const covid19ImpactEstimator = (data) => {
   const impact = {};
