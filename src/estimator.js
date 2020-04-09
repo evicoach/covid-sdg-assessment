@@ -1,33 +1,35 @@
-const currentlyInfected = (reportedCases, impactLevel) => {
-  switch (impactLevel.toLowerCase()) {
-    case 'impact':
-      return reportedCases * 10;
-    case 'severeimpact':
-      return reportedCases * 50;
-    default:
-      throw Error('No such Impact');
+const impactLevel = {
+  IMPACT: 'impact',
+  SEVERE_IMPACT: 'severeimpact'
+};
+
+const currentlyInfected = (reportedCases, neededImpact) => {
+  if (neededImpact === impactLevel.IMPACT) {
+    return reportedCases * 10;
   }
+  return reportedCases * 50;
 };
 
 const calImpactByRequestedTime = (currentlyInfectedNum,
   factor) => currentlyInfectedNum * (2 ** factor);
 
-const infectionsByRequestedTime = (timeToElapse, impactLevel) => {
+const infectionsByRequestedTime = (input, impact, neededImpact) => {
   // NB: currentlyInfected doubles every 3 days
-  impactCurrentlyInfected = currentlyInfected(data.reportedCases, IMPACT);
-  severeImpactCurrentlyInfected = currentlyInfected(data.reportedCases, SEVERE_IMPACT);
+  const impactCurrentlyInfected = currentlyInfected(input.reportedCases, impact.IMPACT);
+  const severeImpactCurrentlyInfected = currentlyInfected(input.reportedCases,
+    impact.SEVERE_IMPACT);
 
   // Normalizing time to elapse
   let actualTime = 0;
-  switch (timeToElapse) {
+  switch (input.periodType) {
     case 'days':
-      actualTime = timeToElapse;
+      actualTime = input.timeToElapse;
       break;
     case 'weeks':
-      actualTime = timeToElapse * 7;
+      actualTime = input.timeToElapse * 7;
       break;
     case 'month':
-      actualTime = timeToElapse * 30;
+      actualTime = input.timeToElapse * 30;
       break;
     default:
       actualTime = -1;
@@ -41,25 +43,26 @@ const infectionsByRequestedTime = (timeToElapse, impactLevel) => {
   const severeImptByReqTime = calImpactByRequestedTime(severeImpactCurrentlyInfected, factor);
 
   // Set the appropriate properties of both impact of severe impact
-  if (impactLevel.toLowerCase() === 'impact') return impactByReqTime;
-  if (impactLevel.toLowerCase() === 'severeimpact') return severeImptByReqTime;
+  if (neededImpact.toLowerCase() === impactLevel.IMPACT) return impactByReqTime;
+  if (neededImpact.toLowerCase() === impactLevel.SEVERE_IMPACT) return severeImptByReqTime;
+  return null;
 };
 
 const covid19ImpactEstimator = (data) => {
-  const IMPACT = 'impact';
-  const SEVERE_IMPACT = 'severeimpact';
-
   const impact = {};
   const severeImpact = {};
 
-  const impactCurrentlyInfected = currentlyInfected(data.reportedCases, IMPACT);
-  const severeImpactCurrentlyInfected = currentlyInfected(data.reportedCases, SEVERE_IMPACT);
+  const impactCurrentlyInfected = currentlyInfected(data.reportedCases, impactLevel.IMPACT);
+  const severeImpactCurrentlyInfected = currentlyInfected(data.reportedCases,
+    impactLevel.SEVERE_IMPACT);
 
   impact.currentlyInfected = impactCurrentlyInfected;
   severeImpact.currentlyInfected = severeImpactCurrentlyInfected;
 
-  impact.infectionsByRequestedTime = infectionsByRequestedTime(data.timeToElapse, IMPACT);
-  severeImpact.infectionsByRequestedTime = infectionsByRequestedTime(data.timeToElapse, SEVERE_IMPACT);
+  impact.infectionsByRequestedTime = infectionsByRequestedTime(data.timeToElapse,
+    impactLevel, impactLevel.IMPACT);
+  severeImpact.infectionsByRequestedTime = infectionsByRequestedTime(data.timeToElapse,
+    impactLevel, impactLevel.SEVERE_IMPACT);
 
   return {
     data,
