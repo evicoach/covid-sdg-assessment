@@ -26,7 +26,7 @@ const actualTimeInDays = (input) => {
       timeInDays = input.timeToElapse * 30;
       break;
     default:
-      timeInDays = -1;
+      timeInDays = 1;
   }
   return timeInDays;
 };
