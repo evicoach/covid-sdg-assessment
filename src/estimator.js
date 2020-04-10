@@ -72,6 +72,23 @@ const pctNeeded = (input, percent, neededImpact) => {
   return parseInt(value, 10);
 };
 
+const dollarsInFlight = (input, neededImpact) => {
+  if (neededImpact === impactLevel.IMPACT) {
+    return parseInt((infectionsByRequestedTime(input,
+      impactLevel, impactLevel.IMPACT)
+      * input.region.avgDailyIncomePopulation
+      * input.region.avgDailyIncomeInUSD)
+      / actualTimeInDays(input), 10);
+  } if (neededImpact === impactLevel.SEVERE_IMPACT) {
+    return parseInt((infectionsByRequestedTime(input,
+      impactLevel, impactLevel.SEVERE_IMPACT)
+      * input.region.avgDailyIncomePopulation
+      * input.region.avgDailyIncomeInUSD)
+      / actualTimeInDays(input), 10);
+  }
+  return null;
+};
+
 const covid19ImpactEstimator = (data) => {
   const impact = {};
   const severeImpact = {};
@@ -113,14 +130,8 @@ const covid19ImpactEstimator = (data) => {
   severeImpact.casesForVentilatorsByRequestedTime = parseInt(0.02
    * severeImpact.infectionsByRequestedTime, 10);
 
-  impact.dollarsInFlight = (impact.infectionsByRequestedTime
-    * data.region.avgDailyIncomePopulation
-    * data.region.avgDailyIncomeInUSD)
-    / actualTimeInDays(data);
-  severeImpact.dollarsInFlight = (severeImpact.infectionsByRequestedTime
-    * data.region.avgDailyIncomePopulation
-    * data.region.avgDailyIncomeInUSD)
-    / actualTimeInDays(data);
+  impact.dollarsInFlight = dollarsInFlight(data, impactLevel.IMPACT);
+  severeImpact.dollarsInFlight = dollarsInFlight(data, impactLevel.SEVERE_IMPACT);
 
   return {
     data,
