@@ -56,16 +56,6 @@ const infectionsByRequestedTime = (input, impact, neededImpact) => {
   return value;
 };
 
-// const severeCasesByRequestedTime = (input, neededImpact) => {
-//   const severeCases = 0.15 * infectionsByRequestedTime(input, impactLevel, neededImpact);
-//   return parseInt(severeCases, 10);
-// };
-
-// const casesForICUByRequestedTime = (input, neededImpact) => {
-//   let fivePct = 0.05 * infectionsByRequestedTime(input, impactLevel, neededImpact);
-//   return parseInt(fivePct, 10);
-// }
-
 const pctNeeded = (input, percent, neededImpact) => {
   const value = ((percent / 100).toFixed(2)) * infectionsByRequestedTime(input,
     impactLevel, neededImpact);
