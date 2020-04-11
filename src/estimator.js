@@ -78,7 +78,7 @@ const dollarsInFlight = (input, neededImpact) => {
   }
   return null;
 };
-// The main function
+
 const covid19ImpactEstimator = (data) => {
   const impact = {};
   const severeImpact = {};
