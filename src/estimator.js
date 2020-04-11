@@ -96,8 +96,6 @@ const covid19ImpactEstimator = (data) => {
   severeImpact.infectionsByRequestedTime = parseInt(infectionsByRequestedTime(data,
     impactLevel, impactLevel.SEVERE_IMPACT), 10);
 
-  // CHALLENGE 2
-
   impact.severeCasesByRequestedTime = pctNeeded(data, 15,
     impactLevel.IMPACT);
   severeImpact.severeCasesByRequestedTime = pctNeeded(data, 15,
