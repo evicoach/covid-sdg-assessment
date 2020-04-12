@@ -4,7 +4,7 @@ import dollarsInFlight from './lib/dollarsInFlight';
 import hospitalBedsByRequestedTime from './lib/hospitalBedsByRequestedTime';
 import infectionsByRequestedTime from './lib/infectionsByRequestedTime';
 import percentNeeded from './lib/percentNeeded';
-
+// The starting  function
 const covid19ImpactEstimator = (data) => {
   const impact = {};
   const severeImpact = {};
